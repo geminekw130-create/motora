@@ -2,28 +2,27 @@ workflows:
   android-release:
     name: Build Android Release APK and AAB
     max_build_duration: 60
+
     environment:
       flutter: stable
       xcode: latest
 
     scripts:
-      - name: Decode Keystore
-        script: |
-          echo "$CM_KEYSTORE" | base64 --decode > android/app/delivery.keystore
-
       - name: Clean
         script: flutter clean
 
       - name: Get dependencies
         script: flutter pub get
 
-      - name: Build APK Signed
+      - name: Setup keystore
         script: |
-          flutter build apk --release
+          echo "$CM_KEYSTORE" | base64 --decode > android/app/delivery.keystore
 
-      - name: Build AAB Signed
-        script: |
-          flutter build appbundle --release
+      - name: Build APK
+        script: flutter build apk --release --no-tree-shake-icons
+
+      - name: Build App Bundle
+        script: flutter build appbundle --release --no-tree-shake-icons
 
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
