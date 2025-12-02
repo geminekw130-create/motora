@@ -5,30 +5,22 @@ workflows:
 
     environment:
       flutter: stable
-      xcode: latest
-
-    android_signing:
-      - DELIVERY_KEYSTORE
 
     scripts:
-      - name: Clean
+      - name: Clean project
         script: flutter clean
 
       - name: Get dependencies
         script: flutter pub get
 
-      # Codemagic automaticamente extrai o keystore para:
-      # /tmp/keys/DELIVERY_KEYSTORE.keystore
-      # mas podemos mover para o local correto:
-      - name: Setup keystore
+      - name: Decode and save keystore
         script: |
-          cp $CM_KEYSTORE_PATH android/app/delivery.keystore
-          echo "Keystore instalado com sucesso"
+          echo "$CM_KEYSTORE" | base64 --decode > android/app/delivery.keystore
 
       - name: Build APK
         script: flutter build apk --release --no-tree-shake-icons
 
-      - name: Build App Bundle
+      - name: Build AAB
         script: flutter build appbundle --release --no-tree-shake-icons
 
     artifacts:
