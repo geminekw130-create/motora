@@ -5,15 +5,26 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
+
     scripts:
+      - name: Decode Keystore
+        script: |
+          echo "$CM_KEYSTORE" | base64 --decode > android/app/delivery.keystore
+
       - name: Clean
         script: flutter clean
+
       - name: Get dependencies
         script: flutter pub get
-      - name: Build APK
-        script: flutter build apk --release
-      - name: Build App Bundle
-        script: flutter build appbundle --release
+
+      - name: Build APK Signed
+        script: |
+          flutter build apk --release
+
+      - name: Build AAB Signed
+        script: |
+          flutter build appbundle --release
+
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/app/outputs/bundle/release/app-release.aab
