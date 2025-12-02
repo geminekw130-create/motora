@@ -5,23 +5,22 @@ workflows:
 
     environment:
       flutter: stable
-      xcode: latest
 
     scripts:
-      - name: Clean
+      - name: Clean project
         script: flutter clean
 
       - name: Get dependencies
         script: flutter pub get
 
-      - name: Setup keystore
+      - name: Decode and save keystore
         script: |
           echo "$CM_KEYSTORE" | base64 --decode > android/app/delivery.keystore
 
       - name: Build APK
         script: flutter build apk --release --no-tree-shake-icons
 
-      - name: Build App Bundle
+      - name: Build AAB
         script: flutter build appbundle --release --no-tree-shake-icons
 
     artifacts:
