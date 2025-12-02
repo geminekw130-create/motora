@@ -31,10 +31,6 @@ android {
         jvmTarget = '1.8'
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-
     defaultConfig {
         applicationId "com.tochegando.motoboy"
         minSdkVersion 23
@@ -44,7 +40,6 @@ android {
         multiDexEnabled true
     }
 
-    // ✔️ CORRIGIDO PARA FUNCIONAR NO CODEMAGIC
     signingConfigs {
         release {
             storeFile file("delivery.keystore")
