@@ -18,7 +18,7 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName", "1.0
 
 android {
     namespace "com.tochegando.motoboy"
-    compileSdkVersion 34  // recomendado, 36 ainda não é padrão estável
+    compileSdkVersion 34
     ndkVersion '26.1.10909125'
 
     compileOptions {
@@ -44,13 +44,13 @@ android {
         multiDexEnabled true
     }
 
-    // ✔️ BLOCO DE ASSINATURA OFICIAL
+    // ✔️ CORRIGIDO PARA FUNCIONAR NO CODEMAGIC
     signingConfigs {
         release {
             storeFile file("delivery.keystore")
-            storePassword "123456"
-            keyAlias "delivery"
-            keyPassword "123456"
+            storePassword System.getenv("CM_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("CM_KEY_ALIAS")
+            keyPassword System.getenv("CM_KEY_PASSWORD")
         }
     }
 
