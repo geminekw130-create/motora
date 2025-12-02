@@ -29,8 +29,9 @@ void main() async {
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox('appBox');
-  await initializeNotifications();
-  await setupOneSignal();
+  // Run notification and OneSignal setup without blocking app startup
+  unawaited(initializeNotifications());
+  unawaited(setupOneSignal());
   notifires = ColorNotifires();
 
   FirebaseFirestore.instance.settings = const Settings(
@@ -49,7 +50,10 @@ void main() async {
   );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
- FlutterError.onError = (FlutterErrorDetails details) {};
+  // Log Flutter errors instead of silently ignoring them
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+  };
   runApp(const MyApp());
 }
 

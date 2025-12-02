@@ -98,13 +98,14 @@ getUserLocation(BuildContext context) async {
 
       goTo(const LoginScreen());
     }
-  } on PlatformException {
+  } on PlatformException catch (e) {
+    debugPrint('getUserLocation PlatformException: $e');
     if (Platform.isIOS) {
       showOpenAppSettingsDialog(
           context, "Please allow location access in settings to continue.");
     }
   } catch (e) {
-   //
+    debugPrint('getUserLocation error: $e');
   }
 }
 
@@ -134,7 +135,7 @@ Future<void> updateDriverLocation({
       });
     }
   } catch (e) {
-     //
+    debugPrint('updateDriverLocation error: $e');
   }
 }
 
@@ -146,8 +147,19 @@ getUserDataLocallyToHandleTheState(BuildContext context ,{bool? isHomePage}) asy
   itemId = 0;
   documentApprovedStatus = "";
 
-  if (box.get("UserData") != null) {
-    String data = box.get("UserData");
+  final rawUserData = box.get("UserData");
+
+  if (rawUserData == null || (rawUserData is String && rawUserData.isEmpty)) {
+    // Fallback seguro: se não há dados locais, vai para LoginScreen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+    return;
+  }
+
+  if (rawUserData != null) {
+    String data = rawUserData;
 
     if (box.get("documentData") != null) {
       String docData = box.get("documentData");
@@ -237,8 +249,21 @@ getUserDataLocallyToHandleTheState(BuildContext context ,{bool? isHomePage}) asy
           return;
         }
       } catch (e) {
-   //
+        debugPrint('getUserDataLocallyToHandleTheState decode error: $e');
+        // Se falhar para decodificar, manda para LoginScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+        return;
       }
+    } else {
+      // String vazia: fallback para LoginScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+      return;
     }
   }
 }

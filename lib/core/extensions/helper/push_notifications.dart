@@ -124,7 +124,7 @@ Future<void> getFCMTokenInitialToSetThedata() async {
       await fetchPlayerId();
     }
   } catch (error) {
-    //
+    debugPrint('getFCMTokenInitialToSetThedata error: $error');
   }
 }
 
@@ -143,7 +143,9 @@ Future<void> getFCMToken() async {
       await fetchPlayerId();
     }
   // ignore: empty_catches
-  } catch (error) {}
+  } catch (error) {
+    debugPrint('getFCMToken error: $error');
+  }
 }
 
 Future<void> addTagWithKey(String token) async {
@@ -156,12 +158,14 @@ Future<void> fetchPlayerId() async {
     oneSignalToken = OneSignal.User.pushSubscription.token;
     oneSignalOptedIn = OneSignal.User.pushSubscription.optedIn;
     if (oneSignalPlayerId != null) {
-
-
-
-    } else {}
+      // ok
+    } else {
+      debugPrint('fetchPlayerId: playerId is null');
+    }
   // ignore: empty_catches
-  } catch (error) {}
+  } catch (error) {
+    debugPrint('fetchPlayerId error: $error');
+  }
 }
 
 Future<void> showNotification(context) async {
